@@ -8,6 +8,7 @@ from api.serializers import *
 from main.models import *
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login
+from django.utils.translation import ugettext_lazy as _
 
 # Create your views here.
 class TestView(APIView):
@@ -29,6 +30,32 @@ class UsernamePasswordAuth(ObtainAuthToken):
             'token': token.key,
             'user': UserSerializer(user).data,
         })
+
+
+class UserRegisterView(APIView):
+    permission_classes = ()
+    authentication_classes = ()
+    def post(self, request):
+        phone = request.data.get('phone')
+        if not phone:
+            raise Exception(_('Phone not entered'))
+        if User.objects.filter(phone=phone).count() > 0:
+            raise Exception('phone is invalid')
+        first_name = request.data.get('first_name', '')
+        last_name = request.data.get('last_name', '')
+        password = request.data.get('password', None)
+        password2 = request.data.get('password2', None)
+        role = request.data.get('role', 'user')
+
+        if not password:
+            raise Exception(_('password not entered'))
+        
+        if password != password2:
+            raise Exception(_('Passwords not match'))
+        
+        new_user = User.objects.create_user(phone, password, first_name=first_name, last_name=last_name)
+
+        return Response({"message": "User Registered"})
 
 class MediaViewSet(ReadOnlyModelViewSet):
     serializer_class = MediaSerializer

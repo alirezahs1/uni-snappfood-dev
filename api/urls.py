@@ -20,6 +20,7 @@ urlpatterns = router.urls
 #User
 urlpatterns += [
     path('auth/login/', UsernamePasswordAuth.as_view()),
+    path('auth/register/', UserRegisterView.as_view()),
     path('orders/<int:pk>/add_item/<product_id>/', OrderViewSet.as_view({'post': 'add_item'})),
     path('orders/<int:pk>/remove_item/<product_id>/', OrderViewSet.as_view({'post': 'remove_item'})),
     path('admin/resturant/', AdminResturantViewSet.as_view({'get' : 'retrieve', 'put' : 'update', 'delete': 'destroy'}))

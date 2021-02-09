@@ -147,6 +147,15 @@ REST_FRAMEWORK = {
         # 'rest_framework.filters.SearchFilter',
         # 'rest_framework.filters.OrderingFilter',
     ],
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '60/minute',
+        'user' : '1000/day'
+    },
     # 'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S",
     'EXCEPTION_HANDLER': 'api.utils.custom_exception_handler',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -154,6 +163,8 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+SECURE_BROWSER_XSS_FILTER = True
 
 try:
     from .local_settings import *
